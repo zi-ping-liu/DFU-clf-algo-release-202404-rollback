@@ -32,7 +32,7 @@ for batch_size in [4, 8]:
                     
                     for attention_type in [1]:
                         
-                        for image_preprocess_normalization in ['min_max_local', 'min_max_global', 'standard_global']:
+                        for image_preprocess_normalization in ['min_max_local', 'min_max_global', 'standard_local', 'standard_global']:
                             
                             for num_conv in [1]:
                             
