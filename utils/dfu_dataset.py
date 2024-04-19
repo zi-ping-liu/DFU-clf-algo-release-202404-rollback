@@ -13,6 +13,7 @@ import numpy as np
 import albumentations as albu
 import cv2
 import torch
+from functools import partial
 
 
 
@@ -61,7 +62,7 @@ class DFUDataset(Dataset):
         sample = augm(image = msi_img, mask = mask)
         msi_img, mask = sample['image'], sample['mask']
         
-        preproc = apply_preprocessing(self.config)
+        preproc = apply_preprocessing(self.config, mask)
         sample = preproc(image = msi_img, mask = mask)
         msi_img, mask = sample['image'], sample['mask']
         
@@ -110,19 +111,21 @@ def apply_augmentation_baseline(config):
 
 
 
-def apply_preprocessing(config):
+def apply_preprocessing(config, mask):
 
     transform = []
         
     if config.IMAGE_PREPROCESS['NORMALIZATION'] == 'standard_local':
         transform.extend([
-            albu.Lambda(image = standardize_local),
+            albu.Lambda(image = partial(standardize_local,
+                                        mask = mask)),
             albu.Lambda(image = transpose, mask = transpose),
         ])
         
     elif config.IMAGE_PREPROCESS['NORMALIZATION'] == 'standard_global':
         transform.extend([
-            albu.Lambda(image = standardize_global),
+            albu.Lambda(image = partial(standardize_global,
+                                        mask = mask)),
             albu.Lambda(image = transpose, mask = transpose),
         ])
         
@@ -147,17 +150,27 @@ def apply_preprocessing(config):
 
 
 
-def standardize_local(image, **kwargs):
+def standardize_local(image, mask, **kwargs):
     # image standardization within each channel
-    mean_, std_ = np.mean(image, axis = (0, 1)), np.std(image, axis = (0, 1))
-    return (image - mean_ + 1e-7) / (std_ + 1e-7)
+    flattened_image = image.reshape(-1, image.shape[-1])
+    flattened_mask = mask.flatten()
+    masked_pixels = flattened_image[flattened_mask.astype(bool)]
+    mean_ = np.mean(masked_pixels, axis = 0)
+    std_ = np.std(masked_pixels, axis = 0)
+    normalized_image = (image - mean_ + 1e-7) / (std_ + 1e-7)
+    return normalized_image
 
 
 
-def standardize_global(image, **kwargs):
+def standardize_global(image, mask, **kwargs):
     # image standardization across all channels
-    mean_, std_ = np.mean(image), np.std(image)
-    return (image - mean_ + 1e-7) / (std_ + 1e-7)
+    flattened_image = image.reshape(-1, image.shape[-1])
+    flattened_mask = mask.flatten()
+    masked_pixels = flattened_image[flattened_mask.astype(bool)]
+    mean_ = np.mean(masked_pixels)
+    std_ = np.std(masked_pixels)
+    normalized_image = (image - mean_ + 1e-7) / (std_ + 1e-7)
+    return normalized_image
 
 
 
