@@ -224,14 +224,16 @@ def stratify_on_ulcer_loc(df_in, train_csv_in, country, best_guids, mode = 'pat'
 if __name__ == '__main__':
     
     # Path to model predictions
-    prediction_path = sys.argv[1]
-    hs = int(sys.argv[2])
-    early_val = sys.argv[3]
+    unified_csv = sys.argv[1]
+    prediction_path = sys.argv[2]
+    hs = int(sys.argv[3])
+    early_val = sys.argv[4]
     
     out_excel_path = f"/home/efs/ziping/workspaces/dfu/clf_algo_release_202404_rollback/out/stratified_analysis"
         
     # Load unified CSV used in training
-    train_csv = pd.read_csv("/home/efs/ziping/workspaces/dfu/clf_algo_release_202404_rollback/src/data/WAUSI_BSV_20240306.csv")
+    train_csv = pd.read_csv(unified_csv)
+    train_csv = train_csv[train_csv['Visit Number'] == 'DFU_SV1'].reset_index(drop = True) # Keep only SV1 rows
     train_csv = train_csv[train_csv['good_ori'] == 'Y'].reset_index(drop = True) # Keep only rows with good orientation
     train_csv = train_csv[~train_csv['DS_split'].isin(['bad_quality', 'exclude_from_classification'])].reset_index(drop = True) # Exclude cases that are not usable
     
