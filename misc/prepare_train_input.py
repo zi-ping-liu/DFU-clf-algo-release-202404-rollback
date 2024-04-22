@@ -2,11 +2,11 @@
 import pandas as pd
 import numpy as np
 
-# bsv = pd.read_csv("/home/efs/ziping/workspaces/dfu/clf_algo_release_202404_rollback/src/data/WAUSI_unifiedv4_BSV_reverted_20240422.csv")
-bsv = pd.read_csv("/home/efs/ziping/workspaces/dfu/clf_algo_release_202404_rollback/src/data/WAUSI_unifiedv4_BSV_revertedMinMax_20240422.csv")
+bsv = pd.read_csv("/home/efs/ziping/workspaces/dfu/clf_algo_release_202404_rollback/src/data/WAUSI_unifiedv4_BSV_reverted_20240422.csv")
+# bsv = pd.read_csv("/home/efs/ziping/workspaces/dfu/clf_algo_release_202404_rollback/src/data/WAUSI_unifiedv4_BSV_revertedMinMax_20240422.csv")
 
-# shiftwin = pd.read_csv("/home/efs/ziping/workspaces/dfu/clf_algo_release_202404_rollback/src/data/WAUSI_unifiedv4_slidingwindow_reverted_20240422.csv")
-shiftwin = pd.read_csv("/home/efs/ziping/workspaces/dfu/clf_algo_release_202404_rollback/src/data/WAUSI_unifiedv4_slidingwindow_revertedMinMax_20240422.csv")
+shiftwin = pd.read_csv("/home/efs/ziping/workspaces/dfu/clf_algo_release_202404_rollback/src/data/WAUSI_unifiedv4_slidingwindow_reverted_20240422.csv")
+# shiftwin = pd.read_csv("/home/efs/ziping/workspaces/dfu/clf_algo_release_202404_rollback/src/data/WAUSI_unifiedv4_slidingwindow_revertedMinMax_20240422.csv")
 shiftwin = shiftwin[bsv.columns]
 
 for col in shiftwin.columns:
@@ -43,7 +43,12 @@ for col in shiftwin.columns:
                 
 df = pd.concat([bsv, shiftwin], ignore_index = True)
 
-df = df[df['ICGUID'] != 'ddc8d7a3-a324-4055-9385-7613c9560784'].reset_index(drop = True)
+df = df[df['ICGUID'].isin(
+    ['ddc8d7a3-a324-4055-9385-7613c9560784', 
+     '1647e48b-de74-4b48-b2bb-b79f1ac88d41', 
+     '8b60ddc8-8b78-462e-93ce-9bab3af975cf', 
+     '89654108-081a-4f7e-98ea-b119da1af3a5', 
+     'c3372c7a-0b45-4c21-98ef-8f09ffee447b'])].reset_index(drop = True)
 
 subjectIDs = df['subject_number'].unique()
 for col in df.columns:
@@ -61,5 +66,5 @@ for subject in df['subject_number'].unique():
     if len(entries) > 1:
         print(f"{subject} - {entries}")
 
-# df.to_csv("/home/efs/ziping/workspaces/dfu/clf_algo_release_202404_rollback/src/data/WAUSI_unifiedv4_BSV+slidingwindow_reverted_20240422.csv", index = False)    
-df.to_csv("/home/efs/ziping/workspaces/dfu/clf_algo_release_202404_rollback/src/data/WAUSI_unifiedv4_BSV+slidingwindow_revertedMinMax_20240422.csv", index = False)
+df.to_csv("/home/efs/ziping/workspaces/dfu/clf_algo_release_202404_rollback/src/data/WAUSI_unifiedv4_BSV+slidingwindow_reverted_20240422.csv", index = False)    
+# df.to_csv("/home/efs/ziping/workspaces/dfu/clf_algo_release_202404_rollback/src/data/WAUSI_unifiedv4_BSV+slidingwindow_revertedMinMax_20240422.csv", index = False)
