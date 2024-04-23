@@ -59,6 +59,9 @@ def predict(test_loader, model, device):
 
 if __name__ == "__main__":
     
+    # Export path
+    save_path = "/home/efs/ziping/workspaces/dfu/clf_algo_release_202404_rollback/results/comparison_study/baseline/hs_571/predictions_test.csv"
+    
     # Load model weights
     model_path = "/home/efs/ziping/workspaces/dfu/clf_algo_release_202404_rollback/results/reproduce_shiftwin/baseline/hs_571"
     best_epoch = 14
@@ -67,33 +70,111 @@ if __name__ == "__main__":
     model = BaseLine(config).to(0)
     model.load_state_dict(torch.load(f"{model_path}/model/snapshot_fold_99/epoch_{best_epoch}.pth"))
     
-    # Export path
-    save_path = "/home/efs/ziping/workspaces/dfu/clf_algo_release_202404_rollback/results/comparison_study/baseline/hs_571/predictions_test.csv"
+    ###################################################################
+    # # Experiment 1: reproduce previous results
+    # # MSI path
+    # train_msi_path = "/home/efs/TrainingData/DFU/BSV+slidingwindow_Processed_V4_centercrop_20240304/cropped_msi_ulcer_only/morph_0" 
+    # # unified CSV used in training
+    # train_unified_csv = pd.read_csv("/home/efs/ziping/workspaces/dfu/clf_algo_release_202404_rollback/src/data/WAUSI_BSV+shiftwin_20240304.csv")
+    # train_unified_csv['GT'] = train_unified_csv['GT_30_old']
+    # train_unified_csv.drop(columns = ['GT_30_old', 'GT_30_new'], inplace = True) 
+    # train_unified_csv = train_unified_csv[train_unified_csv['good_ori'] == 'Y'].reset_index(drop = True)
+    # # unified CSV used in test
+    # test_unified_csv = train_unified_csv.copy()
+    # # Define test subjects
+    # train_subjects = list(train_unified_csv[train_unified_csv['DS_split'] == 'train']['subject_number'].unique())
+    # test_set = test_unified_csv[(test_unified_csv['DS_split'] == 'test') & (~test_unified_csv['subject_number'].isin(train_subjects))]['subject_number'].unique().tolist()
     
+    # # python3 stratified_analysis.py /home/efs/ziping/workspaces/dfu/clf_algo_release_202404_rollback/src/data/WAUSI_BSV+shiftwin_20240304.csv /home/efs/ziping/workspaces/dfu/clf_algo_release_202404_rollback/results/comparison_study/baseline 571 true
+    
+    ###################################################################
+    # # Experiment 2: sensitivity to change in MSI data
+    # # MSI path
+    # train_msi_path = "/home/efs/TrainingData/DFU/BSV+slidingwindow_Processed_V4_centercrop_20240422/cropped_msi_ulcer_only/morph_0" 
+    # # unified CSV used in training
+    # train_unified_csv = pd.read_csv("/home/efs/ziping/workspaces/dfu/clf_algo_release_202404_rollback/src/data/WAUSI_BSV+shiftwin_20240304.csv")
+    # train_unified_csv['GT'] = train_unified_csv['GT_30_old']
+    # train_unified_csv.drop(columns = ['GT_30_old', 'GT_30_new'], inplace = True) 
+    # train_unified_csv = train_unified_csv[train_unified_csv['good_ori'] == 'Y'].reset_index(drop = True)
+    # # unified CSV used in test
+    # test_unified_csv = train_unified_csv.copy()
+    # test_unified_csv = test_unified_csv[test_unified_csv['Visit Number'] == 'DFU_SV1'].reset_index(drop = True)
+    # # Define test subjects
+    # train_subjects = list(train_unified_csv[train_unified_csv['DS_split'] == 'train']['subject_number'].unique())
+    # test_set = test_unified_csv[(test_unified_csv['DS_split'] == 'test') & (~test_unified_csv['subject_number'].isin(train_subjects))]['subject_number'].unique().tolist()
+
+    # # python3 stratified_analysis.py /home/efs/ziping/workspaces/dfu/clf_algo_release_202404_rollback/src/data/WAUSI_BSV+shiftwin_20240304.csv /home/efs/ziping/workspaces/dfu/clf_algo_release_202404_rollback/results/comparison_study/baseline 571 true
+    
+    ###################################################################
+    # # Experiment 3: sensitivity to change in 3D measurements
+    # # MSI path
+    # train_msi_path = "/home/efs/TrainingData/DFU/BSV+slidingwindow_Processed_V4_centercrop_20240422/cropped_msi_ulcer_only/morph_0" 
+    # # unified CSV used in training
+    # train_unified_csv = pd.read_csv("/home/efs/ziping/workspaces/dfu/clf_algo_release_202404_rollback/src/data/WAUSI_BSV+shiftwin_20240304.csv")
+    # train_unified_csv['GT'] = train_unified_csv['GT_30_old']
+    # train_unified_csv.drop(columns = ['GT_30_old', 'GT_30_new'], inplace = True) 
+    # train_unified_csv = train_unified_csv[train_unified_csv['good_ori'] == 'Y'].reset_index(drop = True)
+    # # unified CSV used in test
+    # test_unified_csv = pd.read_csv("/home/efs/ziping/workspaces/dfu/clf_algo_release_202404_rollback/src/data/WAUSI_BSV_oldUnifiedWithNew3DMeasurements_20240417.csv")
+    # test_unified_csv['GT'] = test_unified_csv['GT_30_old']
+    # test_unified_csv.drop(columns = ['GT_30_old', 'GT_30_new'], inplace = True) 
+    # # Define test subjects
+    # train_subjects = list(train_unified_csv[train_unified_csv['DS_split'] == 'train']['subject_number'].unique())
+    # test_set = test_unified_csv[(test_unified_csv['DS_split'] == 'test') & (~test_unified_csv['subject_number'].isin(train_subjects))]['subject_number'].unique().tolist()
+
+    # # python3 stratified_analysis.py /home/efs/ziping/workspaces/dfu/clf_algo_release_202404_rollback/src/data/WAUSI_BSV_oldUnifiedWithNew3DMeasurements_20240417.csv /home/efs/ziping/workspaces/dfu/clf_algo_release_202404_rollback/results/comparison_study/baseline 571 true
+
+    ###################################################################
+    # # Experiment 4: sensitivity to change in GT
+    # # MSI path
+    # train_msi_path = "/home/efs/TrainingData/DFU/BSV+slidingwindow_Processed_V4_centercrop_20240422/cropped_msi_ulcer_only/morph_0" 
+    # # unified CSV used in training
+    # train_unified_csv = pd.read_csv("/home/efs/ziping/workspaces/dfu/clf_algo_release_202404_rollback/src/data/WAUSI_BSV+shiftwin_20240304.csv")
+    # train_unified_csv['GT'] = train_unified_csv['GT_30_old']
+    # train_unified_csv.drop(columns = ['GT_30_old', 'GT_30_new'], inplace = True) 
+    # train_unified_csv = train_unified_csv[train_unified_csv['good_ori'] == 'Y'].reset_index(drop = True)
+    # # unified CSV used in test
+    # test_unified_csv = pd.read_csv("/home/efs/ziping/workspaces/dfu/clf_algo_release_202404_rollback/src/data/WAUSI_BSV_oldUnifiedWithNew3DMeasurements_20240417.csv")
+    # test_unified_csv['GT'] = test_unified_csv['GT_30_old']
+    # test_unified_csv.drop(columns = ['GT_30_old', 'GT_30_new'], inplace = True)
+    # tmp = pd.read_csv("/home/efs/ziping/workspaces/dfu/clf_algo_release_202404_rollback/src/data/WAUSI_unifiedv3_BSVp1-7_reverted_20240418.csv")
+    # for idx in range(len(test_unified_csv)):
+    #     guid = test_unified_csv.loc[idx, 'ICGUID']
+    #     if guid in tmp['ICGUID'].values:
+    #         test_unified_csv.loc[idx, 'GT'] = tmp[tmp['ICGUID'] == guid]['GT_30_new'].values[0]
+    # test_unified_csv.to_csv("/home/efs/ziping/workspaces/dfu/clf_algo_release_202404_rollback/src/data/WAUSI_BSV_oldUnifiedWithNew3DMeasurementsWithNewGT_20240417.csv")
+    
+    # # Define test subjects
+    # train_subjects = list(train_unified_csv[train_unified_csv['DS_split'] == 'train']['subject_number'].unique())
+    # test_set = test_unified_csv[(test_unified_csv['DS_split'] == 'test') & (~test_unified_csv['subject_number'].isin(train_subjects))]['subject_number'].unique().tolist()
+
+    # # python3 stratified_analysis.py /home/efs/ziping/workspaces/dfu/clf_algo_release_202404_rollback/src/data/WAUSI_BSV_oldUnifiedWithNew3DMeasurementsWithNewGT_20240417.csv /home/efs/ziping/workspaces/dfu/clf_algo_release_202404_rollback/results/comparison_study/baseline 571 true
+
+    ###################################################################
+    # Experiment 5: Performance on unseen new test dataset
     # MSI path
-    # train_msi_path = "/home/efs/TrainingData/DFU/BSV_203subj_Processed_V4_centercrop_20240411/cropped_msi_ulcer_only/morph_0"
     train_msi_path = "/home/efs/TrainingData/DFU/BSV+slidingwindow_Processed_V4_centercrop_20240422/cropped_msi_ulcer_only/morph_0"
-    
-    # Load unified CSV used in early validation
-    test_unified_csv = pd.read_csv("/home/efs/ziping/workspaces/dfu/clf_algo_release_202404_rollback/src/data/WAUSI_unifiedv4_BSV_reverted_20240422.csv")
+    # unified CSV used in training
+    train_unified_csv = pd.read_csv("/home/efs/ziping/workspaces/dfu/clf_algo_release_202404_rollback/src/data/WAUSI_BSV+shiftwin_20240304.csv")
+    train_unified_csv['GT'] = train_unified_csv['GT_30_old']
+    train_unified_csv.drop(columns = ['GT_30_old', 'GT_30_new'], inplace = True) 
+    train_unified_csv = train_unified_csv[train_unified_csv['good_ori'] == 'Y'].reset_index(drop = True)
+    # unified CSV used in test
+    test_unified_csv = pd.read_csv("/home/efs/ziping/workspaces/dfu/clf_algo_release_202404_rollback/src/data/WAUSI_unifiedv5_BSV+slidingwindow_reverted_newsplit_20240422.csv")
     test_unified_csv = test_unified_csv[test_unified_csv['good_ori'] == 'Y'].reset_index(drop = True)
     
-    # Get new test subject list (remove overlap)
-    df_old = pd.read_csv("/home/efs/ziping/workspaces/dfu/clf_algo_release_202404_rollback/src/data/processed_WAUSI_BSV+shiftwin_20240304.csv")
-    df_old = df_old[df_old['good_ori'] == 'Y'].reset_index(drop = True)
-    train_subjects = list(df_old[df_old['DS_split'] == 'train']['subject_number'].unique())
-    df_new = pd.read_csv("/home/efs/ziping/workspaces/dfu/clf_algo_release_202404_rollback/src/data/WAUSI_unifiedv4_BSV_reverted_20240422.csv")
-    # test_set = df_new[(df_new['DS_split'] == 'test') & (~df_new['subject_number'].isin(train_subjects))]['subject_number'].unique().tolist()
-    test_set = df_new[(~df_new['DS_split'].isin(['bad_quality', 'exclude_from_classification'])) & (~df_new['subject_number'].isin(train_subjects))]['subject_number'].unique().tolist()
-    #######################################################################################################################
-    
+    # Define test subjects
+    train_subjects = list(train_unified_csv[train_unified_csv['DS_split'] == 'train']['subject_number'].unique())
+    # test_set = test_unified_csv[(~test_unified_csv['subject_number'].isin(train_subjects))]['subject_number'].unique().tolist()
+    test_set = test_unified_csv[(test_unified_csv['DS_split'] == 'test') & (~test_unified_csv['subject_number'].isin(train_subjects))]['subject_number'].unique().tolist()
 
+    # python3 stratified_analysis.py /home/efs/ziping/workspaces/dfu/clf_algo_release_202404_rollback/src/data/WAUSI_unifiedv5_BSV+slidingwindow_reverted_newsplit_20240422.csv /home/efs/ziping/workspaces/dfu/clf_algo_release_202404_rollback/results/comparison_study/baseline 571 true
+    
     # Train/Test split
-    df = pd.read_csv("/home/efs/ziping/workspaces/dfu/clf_algo_release_202404_rollback/src/data/processed_WAUSI_BSV+shiftwin_20240304.csv")
-    df = df[df['good_ori'] == 'Y'].reset_index(drop = True)    
-    df_train = df[df['DS_split'] == 'train'].reset_index(drop = True)
+    df_train = train_unified_csv[train_unified_csv['DS_split'] == 'train'].reset_index(drop = True)
     df_test = test_unified_csv[test_unified_csv['subject_number'].isin(test_set)].reset_index(drop = True)
-              
+    
+    # Preprocess clinical features
     preprocess = PreProcessing(config, df_train, df_test)
     X_train_feat, X_test_feat = preprocess.preprocess_df()
     assert sum(sum(X_train_feat.values - pd.read_csv(f"{model_path}/X_train_feat_fold99.csv").values)) < 1e-3
