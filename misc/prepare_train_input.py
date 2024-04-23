@@ -2,11 +2,11 @@
 import pandas as pd
 import numpy as np
 
-# bsv = pd.read_csv("/home/efs/ziping/workspaces/dfu/clf_algo_release_202404_rollback/src/data/WAUSI_unifiedv4_BSV_reverted_20240422.csv")
-bsv = pd.read_csv("/home/efs/ziping/workspaces/dfu/clf_algo_release_202404_rollback/src/data/WAUSI_unifiedv4_BSV_revertedMinMax_20240422.csv")
+bsv = pd.read_csv("/home/efs/ziping/workspaces/dfu/clf_algo_release_202404_rollback/src/data/WAUSI_unifiedv4_BSV_reverted_20240422.csv")
+# bsv = pd.read_csv("/home/efs/ziping/workspaces/dfu/clf_algo_release_202404_rollback/src/data/WAUSI_unifiedv4_BSV_revertedMinMax_20240422.csv")
 
-# shiftwin = pd.read_csv("/home/efs/ziping/workspaces/dfu/clf_algo_release_202404_rollback/src/data/WAUSI_unifiedv4_slidingwindow_reverted_20240422.csv")
-shiftwin = pd.read_csv("/home/efs/ziping/workspaces/dfu/clf_algo_release_202404_rollback/src/data/WAUSI_unifiedv4_slidingwindow_revertedMinMax_20240422.csv")
+shiftwin = pd.read_csv("/home/efs/ziping/workspaces/dfu/clf_algo_release_202404_rollback/src/data/WAUSI_unifiedv4_slidingwindow_reverted_20240422.csv")
+# shiftwin = pd.read_csv("/home/efs/ziping/workspaces/dfu/clf_algo_release_202404_rollback/src/data/WAUSI_unifiedv4_slidingwindow_revertedMinMax_20240422.csv")
 shiftwin = shiftwin[bsv.columns]
 
 for col in shiftwin.columns:
@@ -32,7 +32,8 @@ for col in shiftwin.columns:
                 u = bsv[bsv['subject_number'] == subjectID][col].values.tolist()
                 v = shiftwin[shiftwin['subject_number'] == subjectID][col].values.tolist()
                 replaced = np.nanmean(u + v)
-                shiftwin.loc[idx, col] = replaced
+                # shiftwin.loc[idx, col] = replaced
+                shiftwin.loc[(shiftwin['subject_number'] == subjectID) & (shiftwin['Visit Number'] == curvisit), col] = replaced
                 print(f"    >> Subject {subjectID} (SV{curvisit[6:]}): replace with mean value - {replaced}")
                 
             # Missing values are filled with BSV entry for the same patient
@@ -66,5 +67,5 @@ for subject in df['subject_number'].unique():
     if len(entries) > 1:
         print(f"{subject} - {entries}")
 
-# df.to_csv("/home/efs/ziping/workspaces/dfu/clf_algo_release_202404_rollback/src/data/WAUSI_unifiedv4_BSV+slidingwindow_reverted_20240422.csv", index = False)    
-df.to_csv("/home/efs/ziping/workspaces/dfu/clf_algo_release_202404_rollback/src/data/WAUSI_unifiedv4_BSV+slidingwindow_revertedMinMax_20240422.csv", index = False)
+df.to_csv("/home/efs/ziping/workspaces/dfu/clf_algo_release_202404_rollback/src/data/WAUSI_unifiedv4_BSV+slidingwindow_reverted_20240422_updated.csv", index = False)    
+# df.to_csv("/home/efs/ziping/workspaces/dfu/clf_algo_release_202404_rollback/src/data/WAUSI_unifiedv4_BSV+slidingwindow_revertedMinMax_20240422.csv", index = False)
