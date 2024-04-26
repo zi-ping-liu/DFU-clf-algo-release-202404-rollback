@@ -165,8 +165,8 @@ if __name__ == "__main__":
     
     # Define test subjects
     train_subjects = list(train_unified_csv[train_unified_csv['DS_split'] == 'train']['subject_number'].unique())
-    # test_set = test_unified_csv[(~test_unified_csv['subject_number'].isin(train_subjects))]['subject_number'].unique().tolist()
-    test_set = test_unified_csv[(test_unified_csv['DS_split'] == 'test') & (~test_unified_csv['subject_number'].isin(train_subjects))]['subject_number'].unique().tolist()
+    test_set = test_unified_csv[(~test_unified_csv['subject_number'].isin(train_subjects))]['subject_number'].unique().tolist()
+    # test_set = test_unified_csv[(test_unified_csv['DS_split'] == 'test') & (~test_unified_csv['subject_number'].isin(train_subjects))]['subject_number'].unique().tolist()
 
     # python3 stratified_analysis.py /home/efs/ziping/workspaces/dfu/clf_algo_release_202404_rollback/src/data/WAUSI_unifiedv5_BSV+slidingwindow_reverted_newsplit_20240422.csv /home/efs/ziping/workspaces/dfu/clf_algo_release_202404_rollback/results/comparison_study/baseline 571 true
     
