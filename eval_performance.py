@@ -80,12 +80,12 @@ if __name__ == "__main__":
     cols = ['hs', 'best_epoch', 'pat_acc', 'pat_sen', 'pat_spe', 'pat_harmonic', 'img_acc', 'img_sen', 'img_spe', 'img_harmonic']
     cv_performance = pd.DataFrame(columns = cols)
     
-    start, end = 571, 571
+    start, end = 991, 991
     for exp_id in range(start, end + 1):
         
         print(f"Progress: {exp_id} / {end} ...", end = "\r")
 
-        results_path = f"/home/efs/ziping/workspaces/dfu/clf_algo_release_202404_rollback/results/reproduce_shiftwin/baseline/hs_{exp_id}"
+        results_path = f"/home/efs/ziping/workspaces/dfu/clf_algo_release_202404_rollback/results/shiftwin_v1/baseline/hs_{exp_id}"
         
         if not os.path.exists(f"{results_path}/model/config_CV.npy"): continue
         
@@ -110,4 +110,4 @@ if __name__ == "__main__":
             df_test, performance_pat_test, performance_img_test = evaluate(config, results_path, best_epoch, mode = 'test')
             df_test.to_csv(f"{results_path}/predictions_test.csv", index = False)
 
-    sorted_df = cv_performance.sort_values(by = 'pat_harmonic', ascending = False)
+    sorted_df = cv_performance.sort_values(by = 'img_harmonic', ascending = False)

@@ -227,13 +227,15 @@ if __name__ == '__main__':
     unified_csv = sys.argv[1]
     prediction_path = sys.argv[2]
     hs = int(sys.argv[3])
-    early_val = sys.argv[4]
+    use_bsv_only = sys.argv[4]
+    early_val = sys.argv[5]
     
     out_excel_path = f"/home/efs/ziping/workspaces/dfu/clf_algo_release_202404_rollback/out/stratified_analysis"
         
     # Load unified CSV used in training
     train_csv = pd.read_csv(unified_csv)
-    train_csv = train_csv[train_csv['Visit Number'] == 'DFU_SV1'].reset_index(drop = True) # Keep only SV1 rows
+    if use_bsv_only.strip().lower() == 'true': # Keep only SV1 rows
+        train_csv = train_csv[train_csv['Visit Number'] == 'DFU_SV1'].reset_index(drop = True) 
     train_csv = train_csv[train_csv['good_ori'] == 'Y'].reset_index(drop = True) # Keep only rows with good orientation
     train_csv = train_csv[~train_csv['DS_split'].isin(['bad_quality', 'exclude_from_classification'])].reset_index(drop = True) # Exclude cases that are not usable
     
@@ -244,7 +246,7 @@ if __name__ == '__main__':
         df_pred = pd.read_csv(f"{prediction_path}/hs_{hs}/predictions_cv.csv") # cross validation
         ds = 'cv'
     
-    df_pred = df_pred[df_pred['Visit Number'] == 'DFU_SV1'].reset_index(drop = True)
+    # df_pred = df_pred[df_pred['Visit Number'] == 'DFU_SV1'].reset_index(drop = True)
     
     # Gather ImgCollGUIDs that yield best orientation for each subject
     train_csv['orientation_deg'].fillna(float('inf'), inplace = True)
