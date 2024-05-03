@@ -80,13 +80,16 @@ if __name__ == "__main__":
     cols = ['hs', 'best_epoch', 'pat_acc', 'pat_sen', 'pat_spe', 'pat_harmonic', 'img_acc', 'img_sen', 'img_spe', 'img_harmonic']
     cv_performance = pd.DataFrame(columns = cols)
     
-    start, end = 994, 994
+    start, end = 1, 144
     for exp_id in range(start, end + 1):
         
         print(f"Progress: {exp_id} / {end} ...", end = "\r")
 
         # results_path = f"/home/efs/ziping/workspaces/dfu/clf_algo_release_202404_rollback/results/shiftwin_v1/baseline/hs_{exp_id}"
-        results_path = f"/home/efs/ziping/workspaces/dfu/clf_algo_release_202404_rollback/results/shiftwin_v2/random_split_5/baseline/hs_{exp_id}"
+        # results_path = f"/home/efs/ziping/workspaces/dfu/clf_algo_release_202404_rollback/results/shiftwin_v2/random_split_5/baseline/hs_{exp_id}"
+        # results_path = f"/home/efs/ziping/workspaces/dfu/clf_algo_release_202404_rollback/results/shiftwin_v3/random_split_5/baseline/hs_{exp_id}"
+        # results_path = f"/home/efs/ziping/workspaces/dfu/clf_algo_release_202404_rollback/results/shiftwin_v4/random_split_5/baseline/hs_{exp_id}"
+        results_path = f"/home/efs/ziping/workspaces/dfu/clf_algo_release_202404_rollback/results/shiftwin_v5/baseline/hs_{exp_id}"
         
         if not os.path.exists(f"{results_path}/model/config_CV.npy"): continue
         
